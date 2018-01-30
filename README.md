@@ -1,2 +1,2 @@
 # noslib
-Library and programs for accessing NOS data
+NOSlib is a Python library and programs for accessing NOS data.
