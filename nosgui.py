@@ -160,7 +160,7 @@ class Application(tk.Frame):
             self.surveyMenu.entryconfigure(0,state=tk.NORMAL)
             self.surveyMenu.entryconfigure(1,state=tk.NORMAL)
             self.surveyMenu.entryconfigure(3,state=tk.NORMAL)
-            print("Survey: %s" %(self.nl.surveys[self.surveyListBox.curselection()[0]][0]))
+            print("Survey: %s" %(self.nl.surveys[int(self.surveyListBox.curselection()[0])][0]))
         
     def _onListSelect(self):
         # Note here that Tkinter passes an event object to onselect()
@@ -333,5 +333,5 @@ if __name__ == '__main__':
     app.master.title('NOS-Fetch')
     #imgicon = tk.PhotoImage(file=os.path.join('./','favicon.ico'))
     #app.master.tk.call('wm', 'iconphoto', app.master._w, imgicon)
-    app.master.iconbitmap(os.path.join('./', 'favicon.ico'))
+    #app.master.iconbitmap(os.path.join('./', 'favicon.ico'))
     root.mainloop()

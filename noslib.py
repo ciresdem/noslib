@@ -14,7 +14,7 @@ import urllib2
 from xml.dom import minidom
 import nos_bounds
 
-_version = '1.0.0'
+_version = '1.0.1'
 
 _license = """
 version %s
@@ -143,16 +143,6 @@ class nosSurvey:
         self._data_url = _nos_data_url+self._directory+self._id+".html"
         self._dir_url = _nos_bd_url+self._directory+self._id+"/"
         self._valid = self.surveyp()
-        if self._valid:
-            
-            self._dir_lines = urllib2.urlopen(self._dir_url).readlines()
-            self._xml_lines = urllib2.urlopen(self._xml_url).read()
-            self._xml_doc = minidom.parseString(self._xml_lines)
-        else:
-            self._dir_lines = []
-            self._xml_lines = ""
-            self._xml_doc = None
-
             
         self._dtypes = self.which_nos()
         self._extents = self.get_extents()
@@ -176,10 +166,15 @@ class nosSurvey:
         
     def surveyp(self):
         try:
-            urllib2.urlopen(self._dir_url)
-            urllib2.urlopen(self._xml_url)
+            self._dir_lines = urllib2.urlopen(self._dir_url).readlines()
+            self._xml_lines = urllib2.urlopen(self._xml_url).read()
+            self._xml_doc = minidom.parseString(self._xml_lines)
             return True
-        except: return False
+        except: 
+            self._dir_lines = []
+            self._xml_lines = ""
+            self._xml_doc = None
+            return False
 
     # output is [survey Letter, survey Number, survey NLetter]
     def processSurveyID(self):
@@ -281,8 +276,11 @@ class nosSurvey:
             datum_strings=[]
             for node in datums:
                 datum_strings.append(node.getElementsByTagName("gco:CharacterString")[0].firstChild.nodeValue)
-            hdatum = datum_strings[0].strip()
-            vdatum = datum_strings[1].strip()
+            if len(datum_strings) == 1:
+                hdatum = datum_strings[0].strip()
+            if len(datum_strings) == 2:
+                hdatum = datum_strings[0].strip()
+                vdatum = datum_strings[1].strip()
         return [hdatum, vdatum]
 
     def get_resolution(self):
@@ -393,6 +391,7 @@ class nosLib:
                 self._fcanceled()
                 break
             s = nosSurvey(i[0])
+            if self._verbose: print("downloading: %s" % i[0])
             for dt in self._dtypes:
                 if dt in s._dtypes:
                     s.fetch(dt)
