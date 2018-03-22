@@ -1,29 +1,40 @@
 #!/usr/bin/env python2
-
-# Copyright (c) 2012 - 2017 Matthew Love <matthew.love@colorado.edu>
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+### nosfetch.py
+##
+## Copyright (c) 2012, 2013, 2014, 2016, 2017, 2018 Matthew Love <matthew.love@colorado.edu>
+##
+## Permission is hereby granted, free of charge, to any person obtaining a copy 
+## of this software and associated documentation files (the "Software"), to deal 
+## in the Software without restriction, including without limitation the rights 
+## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+## of the Software, and to permit persons to whom the Software is furnished to do so, 
+## subject to the following conditions:
+##
+## The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+##
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+## INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+## PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+## FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+## ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+##
+### Code:
 
 import sys
 import urllib2
-import noslib
 from xml.dom import minidom
+import noslib
 
-fnos_version='0.2.0'
+fnos_version='0.2.1'
 
 nos_file = 'fetch_nos_surveys'
 
 nl = noslib.nosLib()
 
 def Usage(use_error=None):
-    print('nos_fetch.py [-region xmin xmax ymin ymax]')
-    print('             [-list-only] [-fetch] [-data datatype]')
-    print('             [-metadata] [-verbose]')
+    print('nosfetch.py [-region xmin xmax ymin ymax]')
+    print('            [-list-only] [-fetch] [-data datatype]')
+    print('            [-metadata] [-verbose]')
     print('')
     print('Options:')
     print('  -region\tSpecifies the desired input region; xmin xmax ymin ymax')
@@ -41,11 +52,11 @@ def Usage(use_error=None):
     print('  -version\tPrint the version information')
     print('')
     print('Example:')
-    print('nos_fetch.py -region -90.75 -88.1 28.7 31.25 -data XYZ,BAG')
+    print('nosfetch.py -region -90.75 -88.1 28.7 31.25 -data XYZ,BAG')
     print('Fetch the metadata only:')
-    print('nos_fetch.py -region -90.75 -88.1 28.7 31.25 -metadata')
+    print('nosfetch.py -region -90.75 -88.1 28.7 31.25 -metadata')
     print('Fetch a single survey:')
-    print('nos_fetch.py -survey H12120')
+    print('nosfetch.py -survey H12120')
     if use_error is not None:
         print('')
         print('Error: %s' %(use_error))
@@ -140,3 +151,5 @@ if __name__ == '__main__':
                 print i
         else:
             nl.fetch()
+
+### End
