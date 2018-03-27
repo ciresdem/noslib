@@ -111,7 +111,7 @@ class Application(tk.Frame):
         self.optionsMenu.add_separator()
         self.optionsMenu.add_command(label="Update Survey DB", command=self.updateSurveys)
 
-        self.helpMenu.add_command(label='About', state=tk.DISABLED)
+        self.helpMenu.add_command(label='About', command=self.about_self)
         self.helpMenu.add_command(label='About NOS Data', command=self.sa)
         
         ## Survey Frame
@@ -238,6 +238,27 @@ class Application(tk.Frame):
     def fetchl(self):
         print("Fetching %d Surveys" %(len(self.nl.surveys)))
         self.fetchSurveys(self.nl.surveys)
+
+    def about_self(self):
+        self.about = tk.Toplevel(class_="about")
+        self.about.title("About nosgui")
+
+        ## Region Frame
+        self.aboutFrame = tk.LabelFrame(self.about, text="About", padx=5, pady=5)
+        self.aboutText = tk.Text(self.aboutFrame)
+        self.aboutText.grid(row=0,column=0)
+        self.aboutText.insert(tk.INSERT, " \n\
+ [ nosGUI ] \n\
+------------ \n\
+\n\
+Fetch and query NOS hydrographic data.\n\
+\n\
+------------\n\
+\n\
+\n\
+Send questions or comments, etc to <matthew.love@colorado.edu>\n\
+")
+        self.aboutFrame.grid(column=0,row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
     def sa(self):
         print(self.s._ngdc_url)
