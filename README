@@ -1,4 +1,19 @@
-# noslib
+ [ noslib ]
+
+------------
+
 NOSlib is a Python library and programs for accessing NOS data.
 
 Run from current directory or install nosgui.py and nosfetch.py to your path and put noslib.py and nos_bounds.py in pythonpath.
+
+------------
+
+- Utilities:
+
+-- nosgui.py
+   A GUI interface to fetch/query nos data.
+
+-- nosfetch.py
+   A CLI interface to fetch/query nos data.
+
+------------
