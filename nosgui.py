@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ### nosgui.py
 ##
-## Copyright (c) 2012, 2013, 2014, 2016, 2017, 2018 Matthew Love <matthew.love@colorado.edu>
+## Copyright (c) 2012, 2013, 2014, 2016, 2017, 2018 Matthew Love
 ##
 ## Permission is hereby granted, free of charge, to any person obtaining a copy 
 ## of this software and associated documentation files (the "Software"), to deal 
@@ -29,7 +29,7 @@ import Tkinter as tk
 import tkFileDialog
 import noslib
 
-_nosgui_version = '0.1.3'
+_nosgui_version = '0.1.4'
 
 class Application(tk.Frame):
 
@@ -218,7 +218,7 @@ class Application(tk.Frame):
 
     def fetchSurveys(self, fsurveys):
         def callback():
-            self.downloading.set("downloading")
+            self.downloading.set("fetching")
             for h,i in enumerate(fsurveys):
                 s = noslib.nosSurvey(i[0])
                 for dt in self.nl._dtypes:
@@ -243,7 +243,7 @@ class Application(tk.Frame):
         self.about = tk.Toplevel(class_="about")
         self.about.title("About nosgui")
 
-        ## Region Frame
+        ## About Frame
         self.aboutFrame = tk.LabelFrame(self.about, text="About", padx=5, pady=5)
         self.aboutText = tk.Text(self.aboutFrame)
         self.aboutText.grid(row=0,column=0)
@@ -343,7 +343,6 @@ Send questions or comments, etc to <matthew.love@colorado.edu>\n\
         print("Fetch Directory: %s" %(noslib._out_dir))
 
     def runUpdate(self):
-        
         def callback():
             nbOb = noslib.nosBounds()
             self.downloading.set("updating")
@@ -355,7 +354,6 @@ Send questions or comments, etc to <matthew.love@colorado.edu>\n\
             self.downloading.set("idle")
         t = threading.Thread(target=callback)
         t.start()
-
 
     def updateSurveys(self):
         print("updating")
