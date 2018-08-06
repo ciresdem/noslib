@@ -65,7 +65,7 @@ _nos_extentions = {'BAG':[".bag.gz"],
 _nos_xml_base_url = "https://www.ngdc.noaa.gov/metadata/published/NOAA/NESDIS/NGDC/MGG/NOS/"
 _nos_xml_end_url = "iso/xml/"
 _nos_bd_url = "https://data.ngdc.noaa.gov/platforms/ocean/nos/coast/"
-_nos_data_url = "https://ngdc.noaa.gov/nos/"
+_nos_data_url = "https://www.ngdc.noaa.gov/nos/"
 
 _out_dir = os.path.dirname(os.path.realpath(__file__))
 

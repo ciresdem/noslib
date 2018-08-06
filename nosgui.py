@@ -261,7 +261,7 @@ Send questions or comments, etc to <matthew.love@colorado.edu>\n\
         self.aboutFrame.grid(column=0,row=0, sticky=tk.N+tk.S+tk.E+tk.W)
 
     def sa(self):
-        print(self.s._ngdc_url)
+        print(self._ngdc_url)
         webbrowser.open(self._ngdc_url)
         
     def si(self):
@@ -274,7 +274,7 @@ Send questions or comments, etc to <matthew.love@colorado.edu>\n\
         
     def sm(self):
         is_sel = self._onListSelect()
-        print(self.s._ngdc_url)
+        print(self._ngdc_url)
         if is_sel:
             if self.s:
                 webbrowser.open(self.s._xml_url)
