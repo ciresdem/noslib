@@ -26,7 +26,7 @@ import urllib2
 from xml.dom import minidom
 import nos_bounds
 
-_version = '1.0.2'
+_version = '1.0.3'
 
 _license = """
 version %s
