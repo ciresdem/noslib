@@ -101,8 +101,9 @@ class nosBounds:
 
     def _appendItem(self, survey_id):
         s = nosSurvey(survey_id)
-        s_entry = [s._id, s._extents, s._date]
-        self.s_list.append(s_entry)
+        if s._valid:
+            s_entry = [s._id, s._extents, s._date]
+            self.s_list.append(s_entry)
 
     def _updateItem(self, item):
         sis = False
@@ -112,14 +113,14 @@ class nosBounds:
             if not sis: self._appendItem(survey_id)
             sis = False
         
-    def _updateLines(self, survey_lines):
+    def _updateLines(self, item):
         sis = False
-        for h,item in enumerate(survey_lines):
-            if ".xml" in item:
-                survey_id = item[item.index(".xml\">"):item.index("</a>")][6:-4]
-                if self._itemInSurveys(survey_id): sis = True
-                if not sis: self._appendItem(survey_id)
-                sis = False
+        if ".xml" in item:
+            survey_id = item[item.index(".xml\">"):item.index("</a>")][6:-4]
+            print survey_id
+            if self._itemInSurveys(survey_id): sis = True
+            if not sis: self._appendItem(survey_id)
+            sis = False
     
     def _updateDir(self, nosdir):
         sis = False
@@ -163,7 +164,7 @@ class nosSurvey:
         self._data_url = _nos_data_url+self._directory+self._id+".html"
         self._dir_url = _nos_bd_url+self._directory+self._id+"/"
         self._valid = self.surveyp()
-            
+
         self._dtypes = self.which_nos()
         self._extents = self.get_extents()
         self._title = self.get_title()
@@ -189,6 +190,7 @@ class nosSurvey:
             self._dir_lines = urllib2.urlopen(self._dir_url).readlines()
             self._xml_lines = urllib2.urlopen(self._xml_url).read()
             self._xml_doc = minidom.parseString(self._xml_lines)
+            self.get_extents()
             return True
         except: 
             self._dir_lines = []
