@@ -101,7 +101,10 @@ class nosBounds:
 
     def _appendItem(self, survey_id):
         s = nosSurvey(survey_id)
+        #print s._id
+        #print s._xml_url
         if s._valid:
+            print s._id
             s_entry = [s._id, s._extents, s._date]
             self.s_list.append(s_entry)
 
@@ -117,7 +120,7 @@ class nosBounds:
         sis = False
         if ".xml" in item:
             survey_id = item[item.index(".xml\">"):item.index("</a>")][6:-4]
-            print survey_id
+            #print survey_id
             if self._itemInSurveys(survey_id): sis = True
             if not sis: self._appendItem(survey_id)
             sis = False
@@ -164,6 +167,7 @@ class nosSurvey:
         self._data_url = _nos_data_url+self._directory+self._id+".html"
         self._dir_url = _nos_bd_url+self._directory+self._id+"/"
         self._valid = self.surveyp()
+        #self._valid = True
 
         self._dtypes = self.which_nos()
         self._extents = self.get_extents()
@@ -190,7 +194,7 @@ class nosSurvey:
             self._dir_lines = urllib2.urlopen(self._dir_url).readlines()
             self._xml_lines = urllib2.urlopen(self._xml_url).read()
             self._xml_doc = minidom.parseString(self._xml_lines)
-            self.get_extents()
+            #self.get_extents()
             return True
         except: 
             self._dir_lines = []
@@ -253,7 +257,7 @@ class nosSurvey:
         wl, el, sl, nl = -9999, -9999, -9999, -9999
         if self._valid: bounding = self._xml_doc.getElementsByTagName("gmd:EX_GeographicBoundingBox")
         else: bounding = []
-        if len(bounding) >= 1:
+        if len(bounding) > 1:
             for node in bounding:
                 wl_xgc = node.getElementsByTagName("gmd:westBoundLongitude")
                 for i in wl_xgc:
