@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ### nosfetch.py
 ##
 ## Copyright (c) 2012, 2013, 2014, 2016, 2017, 2018 Matthew Love <matthew.love@colorado.edu>
@@ -20,12 +20,13 @@
 ##
 ### Code:
 
+import os
 import sys
 import urllib2
 from xml.dom import minidom
 import noslib
 
-fnos_version='0.2.1'
+fnos_version='0.2.2'
 
 nos_file = 'fetch_nos_surveys'
 
@@ -45,7 +46,8 @@ def Usage(use_error=None):
     print('       \t\tuse nos_info.py -survey surveyID, default will fetch all available data types;')
     print('       \t\tseparate datatypes with a `,`')
     print('       \t\tData types include: %s' %(nl.dic_key_list(noslib._nos_extentions)))
-    print('  -metadata\tDownload the associated metadata xml file')
+    print('  -metadata\tDownload the associated metadata xml file.')
+    print('  -process\tGenerate a script to convert the downloaded data to xyz.')
     print('')
     print('  -verbose\tIncrease verbosity')
     print('  -help\t\tPrint the usage text')
@@ -62,6 +64,29 @@ def Usage(use_error=None):
         print('Error: %s' %(use_error))
         sys.exit(0)
 
+def gen_proc(data_type='xyz'):
+    proc_n = 'nos_%s2xyz.sh' %(data_type)
+    proc_file = open(proc_n, 'w')
+    proc_file.write('#!/bin/sh\n\n')
+    proc_file.write('### Code: \n\n')
+    proc_file.write('mkdir %s\n' %(data_type))
+    proc_file.write('for i in *.%s.gz; do\n' %(data_type))
+    proc_file.write('\tgunzip $i;\n')
+    if data_type == 'xyz':
+        proc_file.write('\tawk -F, \'{if (NR!=1) {print $3,$2,$4*-1}}\' $(basename $i .gz) > %s/$(basename $i .gz);\n' %(data_type))
+    elif data_type == 'bag':
+        proc_file.write('\tgdalwarp $(basename $i .gz) $(basename $i .bag.gz).tif -t_srs \'EPSG:4326\';\n')
+        proc_file.write('\tndata=$(gdalinfo $(basename $i .bag.gz).tif | grep NoData | awk -F= \'{print $2}\')\n')
+        proc_file.write('\tNoData=$(echo $ndata | awk \'{print $1}\')\n')
+        proc_file.write('\tgdal_translate $(basename $i .bag.gz).tif $(basename $i .bag.gz).xyz -of XYZ\n')
+        proc_file.write('\tcat $(basename $i .bag.gz).xyz | grep -v $NoData > %s/$(basename $i .bag.gz).xyz;\n' %(data_type))
+        proc_file.write('\trm $(basename $i .bag.gz).tif $(basename $i .bag.gz).xyz;\n')
+    proc_file.write('\tgzip $(basename $i .gz);\n')
+    proc_file.write('done\n\n')
+    proc_file.write('### End\n')
+    proc_file.close()
+    os.chmod(proc_n, 0o775)
+
 #--
 #
 # Mainline
@@ -73,6 +98,7 @@ if __name__ == '__main__':
     fetch_list = None
     lst_only = False
     get_xml = False
+    proc = False
     dtype="ALL"
     verbose=False
 
@@ -106,6 +132,9 @@ if __name__ == '__main__':
                 i = i + 1
             except: Usage("you must enter a value with the -survey switch")
 
+        elif arg == '-process':
+            proc = True
+
         elif arg == '-verbose':
             verbose = True
 
@@ -136,9 +165,16 @@ if __name__ == '__main__':
     dts = []
     if dtypes != ['ALL']:
         for dt in dtypes:
+            if proc:
+                if dt == 'XYZ': gen_proc('xyz')
+                if dt == 'BAG': gen_proc('bag')
             if dt == 'XYZ': dt = 'GEODAS'
             if dt in nl._dtypes: dts.append(dt)
         nl._set_dtypes(dts)
+    else:
+        if proc:
+            if dt == 'XYZ': gen_proc('xyz')
+            if dt == 'BAG': gen_proc('bag')
 
     if fetch_list:
         s = noslib.nosSurvey(fetch_list)
