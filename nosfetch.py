@@ -34,8 +34,8 @@ nl = noslib.nosLib()
 
 def Usage(use_error=None):
     print('nosfetch.py [-region xmin xmax ymin ymax]')
-    print('            [-list-only] [-fetch] [-data datatype]')
-    print('            [-metadata] [-verbose]')
+    print('            [-list-only] [-data datatype] [-metadata]')
+    print('            [-process] [-verbose]')
     print('')
     print('Options:')
     print('  -region\tSpecifies the desired input region; xmin xmax ymin ymax')
