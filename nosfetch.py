@@ -47,7 +47,7 @@ def Usage(use_error=None):
     print('       \t\tseparate datatypes with a `,`')
     print('       \t\tData types include: %s' %(nl.dic_key_list(noslib._nos_extentions)))
     print('  -metadata\tDownload the associated metadata xml file.')
-    print('  -process\tGenerate a script to convert the downloaded data to xyz.')
+    print('  -process\tGenerate a shell script to convert the downloaded BAG or XYZ data to standard xyz.')
     print('')
     print('  -verbose\tIncrease verbosity')
     print('  -help\t\tPrint the usage text')
