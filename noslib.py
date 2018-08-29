@@ -48,11 +48,12 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     """ %(_version)
 
-_nos_dtypes = ['BAG', 'DR', 'Smooth_Sheets', 'TIDES', 'project_sketches', 'Bottom_Samples', 'XML', 'GEODAS', 'GeoImagePDF']
+_nos_dtypes = ['BAG', 'DR', 'Smooth_Sheets', 'TIDES', 'project_sketches', 'Bottom_Samples', 'XML', 'GEODAS', 'GeoImagePDF', 'XYZ']
 _nos_directories = ["B00001-B02000/", "D00001-D02000/", "F00001-F02000/", "H00001-H02000/", "H02001-H04000/", "H04001-H06000/", "H06001-H08000/", "H08001-H10000/", "H10001-H12000/", "H12001-H14000/", "L00001-L02000/", "L02001-L04000/", "T00001-T02000/", "W00001-W02000/"]
 
 _nos_extentions = {'BAG':[".bag.gz"],
                    'GEODAS': [".xyz.gz", ".a93.gz"],
+                   'XYZ': [".xyz.gz", ".a93.gz"],
                    'DR':[".pdf"],
                    'Smooth_Sheets':[".pdf",".sid.gz",".tif.gz"],
                    'TIDES':[".pdf"],
@@ -417,7 +418,7 @@ class nosLib:
                 self._fcanceled()
                 break
             s = nosSurvey(i[0])
-            if self._verbose: print("downloading: %s" % i[0])
+            if self._verbose: print("noslib: Fetching %s datatypes for survey: %s" %(self._dtypes, i[0]))
             for dt in self._dtypes:
                 if dt in s._dtypes:
                     s.fetch(dt)

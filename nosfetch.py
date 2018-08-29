@@ -34,35 +34,25 @@ nl = noslib.nosLib()
 
 def Usage(use_error=None):
     print('')
-    print('usage: nosfetch.py [-region xmin xmax ymin ymax] [-data datatype] [-survey survyeID] [-list-only] [-metadata] [-process] [-update] [-verbose]')
-    if use_error is None:
-        print('')
-        print('Options:')
-        print('  -region\tSpecifies the desired input region; xmin xmax ymin ymax')
-        print('  -list_only\tObtain only a list of surveys in the given region.')
-        print('  -survey\tFetch a specific survey, enter the surveyID here; this will also accept a file with a list of surveyIDs')
-        print('  -data\t\tSpecify the data type to download, to see what data types are available for a given survey,')
-        print('       \t\tuse nos_info.py -survey surveyID, default will fetch all available data types;')
-        print('       \t\tseparate datatypes with a `,`')
-        print('       \t\tData types include: %s' %(nl.dic_key_list(noslib._nos_extentions)))
-        print('  -metadata\tDownload the associated metadata xml file.')
-        print('  -process\tGenerate a shell script to convert the downloaded BAG or XYZ data to standard xyz.')
-        print('')
-        print('  -update\tUpdate the stored list of surveys.')
-        print('  -verbose\tIncrease verbosity')
-        print('  -help\t\tPrint the usage text')
-        print('  -version\tPrint the version information')
-        print('')
-        print('Example:')
-        print('nosfetch.py -region -90.75 -88.1 28.7 31.25 -data XYZ,BAG')
-        print('Fetch the metadata only:')
-        print('nosfetch.py -region -90.75 -88.1 28.7 31.25 -metadata')
-        print('Fetch a single survey:')
-        print('nosfetch.py -survey H12120')
-        print('')
-    else:
-        print('')
-        print('Error: %s' %(use_error))
+    print('usage: nosfetch.py [-region xmin xmax ymin ymax] [-survey survyeID] [-data datatype] [-list-only] [-process] [-update] [-verbose]')
+    print('')
+    print('Options:')
+    print('  -region\tSpecifies the desired input region; xmin xmax ymin ymax')
+    print('  -survey\tFetch a specific survey, enter the surveyID here; this will also accept a file with a list of surveyIDs')
+    print('  -data\t\tSpecify the data type to download; separate datatypes with a `,`')
+    print('       \t\tPossible types include: %s' %(nl.dic_key_list(noslib._nos_extentions)))
+    print('  -list_only\tOnly fetch a list of surveys in the given region.')
+    print('  -process\tGenerate a shell script to convert the downloaded BAG or GEODAS/XYZ data to standard xyz.')
+    print('  -update\tUpdate the stored list of surveys.')
+    print('  -verbose\tIncrease verbosity')
+    print('')
+    print('  -help\t\tPrint the usage text')
+    print('  -version\tPrint the version information')
+    print('')
+    print('Example:')
+    print('nosfetch.py -region -90.75 -88.1 28.7 31.25 -data XYZ,BAG')
+    print('')
+    print('nos_fetch.py v.%s | noslib v.%s' %(fnos_version, noslib._version))
     sys.exit(0)
 
 def gen_proc(data_type='xyz'):
@@ -98,7 +88,6 @@ if __name__ == '__main__':
     extent = None
     fetch_list = None
     lst_only = False
-    get_xml = False
     proc = False
     want_update = False
     dtype="ALL"
@@ -124,9 +113,6 @@ if __name__ == '__main__':
                 dtype = sys.argv[i+1]
                 i = i + 1
             except: Usage("you must enter a value with the -data switch")
-
-        elif arg == '-metadata':
-            get_xml = True
 
         elif arg == '-survey':
             try:
@@ -166,7 +152,7 @@ if __name__ == '__main__':
         Usage("you must either enter a region or a surveyID")
     
     dtypes = dtype.split(",")
-    nl._verbose = True
+    nl._verbose = verbose
     dts = []
     if dtypes != ['ALL']:
         for dt in dtypes:
