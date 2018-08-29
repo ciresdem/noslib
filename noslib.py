@@ -26,7 +26,7 @@ import urllib2
 from xml.dom import minidom
 import nos_bounds
 
-_version = '1.0.3'
+_version = '1.0.4'
 
 _license = """
 version %s
@@ -104,7 +104,7 @@ class nosBounds:
         #print s._id
         #print s._xml_url
         if s._valid:
-            print s._id
+            print("noslib: Appending survey: %s" %(s._id))
             s_entry = [s._id, s._extents, s._date]
             self.s_list.append(s_entry)
 

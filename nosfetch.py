@@ -33,15 +33,13 @@ nos_file = 'fetch_nos_surveys'
 nl = noslib.nosLib()
 
 def Usage(use_error=None):
-    print('nosfetch.py [-region xmin xmax ymin ymax]')
-    print('            [-list-only] [-data datatype] [-metadata]')
-    print('            [-process] [-verbose]')
+    print('')
+    print('usage: nosfetch.py [-region xmin xmax ymin ymax] [-data datatype] [-survey survyeID] [-list-only] [-metadata] [-process] [-update] [-verbose]')
     print('')
     print('Options:')
     print('  -region\tSpecifies the desired input region; xmin xmax ymin ymax')
     print('  -list_only\tObtain only a list of surveys in the given region.')
-    print('  -survey\tGet a specific survey, enter the surveyID here; this will also accept a file with a list of')
-    print('         \tsurveyIDs')
+    print('  -survey\tFetch a specific survey, enter the surveyID here; this will also accept a file with a list of surveyIDs')
     print('  -data\t\tSpecify the data type to download, to see what data types are available for a given survey,')
     print('       \t\tuse nos_info.py -survey surveyID, default will fetch all available data types;')
     print('       \t\tseparate datatypes with a `,`')
@@ -49,6 +47,7 @@ def Usage(use_error=None):
     print('  -metadata\tDownload the associated metadata xml file.')
     print('  -process\tGenerate a shell script to convert the downloaded BAG or XYZ data to standard xyz.')
     print('')
+    print('  -update\tUpdate the stored list of surveys.')
     print('  -verbose\tIncrease verbosity')
     print('  -help\t\tPrint the usage text')
     print('  -version\tPrint the version information')
@@ -99,6 +98,7 @@ if __name__ == '__main__':
     lst_only = False
     get_xml = False
     proc = False
+    want_update = False
     dtype="ALL"
     verbose=False
 
@@ -135,6 +135,9 @@ if __name__ == '__main__':
         elif arg == '-process':
             proc = True
 
+        elif arg == '-update':
+            want_update = True
+
         elif arg == '-verbose':
             verbose = True
 
@@ -157,7 +160,7 @@ if __name__ == '__main__':
 
     bounds = extent
 
-    if extent is None and fetch_list is None:
+    if extent is None and fetch_list is None and want_update is False:
         Usage("you must either enter a region or a surveyID")
     
     dtypes = dtype.split(",")
@@ -176,7 +179,15 @@ if __name__ == '__main__':
             if dt == 'XYZ': gen_proc('xyz')
             if dt == 'BAG': gen_proc('bag')
 
-    if fetch_list:
+    if want_update:
+        nbOb = noslib.nosBounds("nos_bounds.py.update")
+        for i in noslib._nos_directories:
+            sl = nbOb._readDir(i)
+            for j in sl:
+                nbOb._updateLines(j)
+        nbOb._write()
+
+    elif fetch_list:
         s = noslib.nosSurvey(fetch_list)
         for dt in nl._dtypes:
             s.fetch(dt)
